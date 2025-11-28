@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!-- Adapted from https://app.ignitionrobotics.org/openrobotics/fuel/models/panda with ignition position controller model -->
+<sdf version="1.7">
+  <model name="panda_hand">
+    <frame name="mount_point" attached_to="panda_hand"/>
+    <!-- Hand Links -->
+    <link name="panda_hand">
+      <visual name="panda_hand_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>meshes/visual/hand.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="panda_hand_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>meshes/collision/hand.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.05</mu>
+              <mu2>1.05</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <inertial>
+        <pose>-6.7624e-06 0.00152435 0.0275912 0 0 0</pose>
+        <mass>0.14060765127978503</mass>
+        <inertia>
+          <ixx>0.0005365450414352072</ixx>
+          <iyy>7.70511954783727e-05</iyy>
+          <izz>0.0004938176882694914</izz>
+          <ixy>1.7911952957732454e-08</ixy>
+          <ixz>-2.320071910601251e-08</ixz>
+          <iyz>4.681149945315967e-08</iyz>
+        </inertia>
+      </inertial>
+    </link>
+    <link name="panda_leftfinger">
+      <pose relative_to="panda_finger_joint1">0 0 0 0 0 0</pose>
+      <visual name="panda_leftfinger_visual">
+        <geometry>
+          <mesh>
+            <uri>meshes/visual/finger.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="panda_leftfinger_collision">
+        <geometry>
+          <mesh>
+            <uri>meshes/collision/finger.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>2.15</mu>
+              <mu2>2.15</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <inertial>
+        <pose>-6.2561e-06 0.00227781 -0.0277116 0 0 0</pose>
+        <mass>0.2238453537819424</mass>
+        <inertia>
+          <ixx>6.74804167363695e-05</ixx>
+          <iyy>6.627189221641395e-05</iyy>
+          <izz>1.550396267804825e-05</izz>
+          <ixy>-4.1027443646025676e-09</ixy>
+          <ixz>1.8693673970152995e-08</ixz>
+          <iyz>1.1967548474390802e-05</iyz>
+        </inertia>
+      </inertial>
+    </link>
+    <link name="panda_rightfinger">
+      <pose relative_to="panda_finger_joint2">0 0 0 0 0 0</pose>
+      <visual name="panda_rightfinger_visual">
+        <pose>0 0 0 0 0 3.141592653589793</pose>
+        <geometry>
+          <mesh>
+            <uri>meshes/visual/finger.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="panda_rightfinger_collision">
+        <pose>0 0 0 0 0 3.141592653589793</pose>
+        <geometry>
+          <mesh>
+            <uri>meshes/collision/finger.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>2.15</mu>
+              <mu2>2.15</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <inertial>
+        <pose>-6.2561e-06 0.00227781 -0.0277116 0 0 3.141592653589793</pose>
+        <mass>0.2238453537819424</mass>
+        <inertia>
+          <ixx>6.74804167363695e-05</ixx>
+          <iyy>6.627189221641395e-05</iyy>
+          <izz>1.550396267804825e-05</izz>
+          <ixy>-4.1027443646025676e-09</ixy>
+          <ixz>1.8693673970152995e-08</ixz>
+          <iyz>1.1967548474390802e-05</iyz>
+        </inertia>
+      </inertial>
+    </link>
+    <!-- Finger Joints -->
+    <joint name="panda_finger_joint1" type="prismatic">
+      <pose relative_to="panda_hand">0 0 0.0584 0 0 0</pose>
+      <parent>panda_hand</parent>
+      <child>panda_leftfinger</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <effort>20</effort>
+          <lower>0.0</lower>
+          <upper>0.04</upper>
+          <velocity>0.2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+          <damping>10</damping>
+          <friction>0.5</friction>
+        </dynamics>
+      </axis>
+    </joint>
+    <joint name="panda_finger_joint2" type="prismatic">
+      <pose relative_to="panda_hand">0 0 0.0584 0 0 0</pose>
+      <parent>panda_hand</parent>
+      <child>panda_rightfinger</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <effort>20</effort>
+          <lower>0.0</lower>
+          <upper>0.04</upper>
+          <velocity>0.2</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+          <damping>10</damping>
+          <friction>0.5</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <plugin filename="ignition-gazebo-joint-position-controller-system" name="ignition::gazebo::systems::JointPositionController">
+      <joint_name>panda_finger_joint1</joint_name>
+      <p_gain>100</p_gain>
+      <d_gain>1</d_gain>
+      <i_gain>0</i_gain>
+      <i_min>-1</i_min>
+      <i_max>1</i_max>
+    </plugin>
+    <plugin filename="ignition-gazebo-joint-position-controller-system" name="ignition::gazebo::systems::JointPositionController">
+      <joint_name>panda_finger_joint2</joint_name>
+      <p_gain>100</p_gain>
+      <d_gain>1</d_gain>
+      <i_gain>0</i_gain>
+      <i_min>-1</i_min>
+      <i_max>1</i_max>
+    </plugin>
+  </model>
+</sdf>

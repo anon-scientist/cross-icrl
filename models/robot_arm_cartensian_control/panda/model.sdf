@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="panda_combined">
+    <!-- Arm Model -->
+    <include>
+      <uri>model://panda-arm</uri>
+      <name>panda_arm</name>
+    </include>
+
+    <!-- Hand Model -->
+    <include>
+      <uri>model://panda-hand</uri>
+      <name>panda_hand</name>
+      <pose relative_to="panda_arm::panda_link7">0 0 0.1 0 0 0</pose>
+    </include>
+
+    <!-- Joint connecting Arm and Hand -->
+    <joint name="panda_hand_joint" type="fixed">
+      <parent>panda_arm::panda_link7</parent>
+      <child>panda_hand::panda_hand</child>
+    </joint>
+  </model>
+</sdf>

@@ -1,0 +1,70 @@
+<html>
+<head>
+<h1>Live Visualization of images from RL</h1>
+Visualization is refreshed every 200ms.<br>
+<script type="text/JavaScript">
+var url = "camera.png"; //url to load image from
+var url2 = "camera2.png"; //url to load image from
+var url3 = "top.png"; //url to load image from
+var refreshInterval = 200; //in ms
+var drawDate = true; //draw date string
+var img;
+var img2;
+
+function init() {
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    var canvas2 = document.getElementById("canvas2");
+    var context2 = canvas2.getContext("2d");
+    var canvas3 = document.getElementById("canvas3");
+    var context3 = canvas3.getContext("2d");
+    img = new Image();
+    img2 = new Image();
+    img3 = new Image();
+    img.onload = function() {
+        canvas.setAttribute("width", img.width)
+        canvas.setAttribute("height", img.height)
+        context.drawImage(this, 0, 0) ;
+    };
+    img2.onload = function() {
+        canvas2.setAttribute("width", img2.width)
+        canvas2.setAttribute("height", img2.height)
+        context2.drawImage(this, 0, 0);
+    };
+
+    img3.onload = function() {
+        canvas3.setAttribute("width", img3.width)
+        canvas3.setAttribute("height", img3.height)
+        context3.drawImage(this, 0, 0);
+    };
+
+    refresh();
+}
+
+
+function refresh()
+{
+    img.src = url + "?t=" + new Date().getTime();
+    img2.src = url2 + "?t=" + new Date().getTime();
+    img3.src = url3 + "?t=" + new Date().getTime();
+    setTimeout("refresh()",refreshInterval);
+}
+
+</script>
+<title>JavaScript Refresh Example</title>
+</head>
+
+<body onload="JavaScript:init();">
+last:
+<canvas id="canvas"/>
+</canvas>
+<br>
+this:
+<canvas id="canvas2"/>
+</canvas>
+
+top:
+<canvas id="canvas3"/>
+</canvas>
+</body>
+</html>

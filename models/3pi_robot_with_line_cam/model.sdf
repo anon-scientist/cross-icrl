@@ -1,0 +1,1243 @@
+<?xml version="1.0"?>
+<sdf version="1.11">
+  <model name="3pi_robot_with_line_cam">
+   <!-- Does not work for some rerason...  If present but not used makes model fall in slow motion! -->
+   <!-- Reason: assumes that we set vel per topic at one point in time, and that vel command is repeated at every step until a new cmd comes in.
+        That makes the plugin unusable even for resetting vels just once -->
+   <!--
+    <plugin
+        filename="gz-sim-velocity-control-system"
+        name="gz::sim::systems::VelocityControl">
+        <topic>/vehicle/direct_cmd_vel</topic>
+        <initial_linear>0 0 0</initial_linear>
+        <initial_angular>0 0 0</initial_angular>
+    </plugin>  
+    -->
+
+    <static>0</static>
+    <pose>0 0 0 0 0 0</pose>
+    <frame name="blade_frame" attached_to="blade_link">
+      <pose>0.0 0 0 0 0 0</pose>
+    </frame>
+    <!-- LINKS - LINKS - LINKS -->
+    <!-- Central robot body, a flat disc -->
+    <link name="blade_link">
+      <pose>0 0 0.013 0 0 0</pose>
+      <inertial>
+        <mass>0.0005</mass>
+        <pose>0 0 0.001 0 0 0</pose>
+        <inertia>
+          <ixx>2.92e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2.92e-06</iyy>
+          <iyz>0</iyz>
+          <izz>5.52e-06</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="blade_visual">
+        <pose>0 0 0.001 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.047</radius>
+            <length>0.002</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.0 1.0 1.0 1</ambient>
+          <diffuse>0.0 1.0 1.0 1</diffuse>
+          <specular>0.0 1.0 1.0 1</specular>
+        </material>
+        <transparency>0</transparency>
+        <cast_shadows>0</cast_shadows>
+      </visual>
+      </link>
+
+      <!-- lidar 2 cm above robot body, so as to look over the bumper sensor -->
+      <link name="lidar_link">
+        <pose relative_to="blade_frame">0 0 0.02 0 0 0</pose>
+        <!-- disable LIDAR visualization to prevent lidar beams to detect it -->
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.01</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 1 0.1 1</ambient>
+          <diffuse>0.1 1 0.1 1</diffuse>
+          </material>
+        </visual>  
+
+        <sensor name="gpu_lidar" type="gpu_lidar">
+                <!-- move sensor slightly in front of visual shape to prevent detecting it -->
+                <pose>0.011 0 0 0 0 0</pose>
+                <topic>/vehicle/lidar</topic>
+                <update_rate>300</update_rate>
+                <ray>
+                <scan>
+                  <horizontal>
+                     <samples>500</samples>
+                     <resolution>1</resolution>
+                     <min_angle>-2</min_angle><max_angle>2</max_angle>
+                 </horizontal>
+                 <vertical><samples>1</samples><resolution>0.01</resolution><min_angle>0</min_angle><max_angle>0</max_angle>
+                 </vertical>
+                 </scan>
+                 
+                 <range><min>0.005</min><max>1.5</max><resolution>0.01</resolution></range></ray>
+                <always_on>1</always_on>
+                <visualize>false</visualize>
+            </sensor>
+       </link>
+
+    <link name="led1_link">
+      <pose>-0.043 -0.01 0.013 0 0 0</pose>
+      <inertial><mass>0.00000000001</mass></inertial>
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.003</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 0.1</ambient>
+          <diffuse>0.1 0.1 0.1</diffuse>
+          </material>
+        </visual> 
+    </link>
+
+    <link name="led2_link">
+      <pose>-0.043 0.01 0.013 0 0 0</pose>
+      <inertial><mass>0.00000000001</mass></inertial>
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.003</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 0.1</ambient>
+          <diffuse>0.1 0.1 0.1</diffuse>
+          </material>
+        </visual> 
+    </link>
+
+    <link name="led3_link">
+      <pose>-0.04 -0.015 0.013 0 0 0</pose>
+      <inertial><mass>0.00000000001</mass></inertial>
+
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.003</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 0.1</ambient>
+          <diffuse>0.1 0.1 0.1</diffuse>
+          </material>
+        </visual> 
+    </link>
+
+    <link name="led4_link">
+      <pose>-0.04 -0.005 0.013 0 0 0</pose>
+      <inertial><mass>0.00000000001</mass></inertial>
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.003</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 0.1</ambient>
+          <diffuse>0.1 0.1 0.1</diffuse>
+          </material>
+        </visual> 
+    </link>
+
+    <link name="led5_link">
+      <pose>-0.04 0.005 0.013 0 0 0</pose>
+      <inertial><mass>0.00000000001</mass></inertial>
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.003</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 0.1</ambient>
+          <diffuse>0.1 0.1 0.1</diffuse>
+          </material>
+        </visual> 
+    </link>
+
+    <link name="led6_link">
+      <pose>-0.04 0.015 0.013 0 0 0</pose>
+      <inertial><mass>0.00000000001</mass></inertial>
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.003</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 0.1</ambient>
+          <diffuse>0.1 0.1 0.1</diffuse>
+          </material>
+        </visual> 
+    </link>
+
+    <link name='front_bumper'>    
+      <pose relative_to="blade_frame">0.047 0 0.0 0 0 0</pose>
+      <inertial><mass>0.0000000001</mass></inertial>
+      <gravity>1</gravity>
+      <kinematic>0</kinematic>
+      <collision name="collision_sensor1_volume">
+
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <contact>
+          <collide_without_contact>true</collide_without_contact>
+          <collide_without_contact_bitmask>0x00</collide_without_contact_bitmask>
+            <ode>
+              <max_vel> 0.0</max_vel>
+              <kp>0</kp>
+              <kd>100000000</kd>
+            </ode>
+          </contact>
+            <friction>
+            <ode> <mu>200000000000</mu><mu2>2000000000</mu2>
+            </ode>
+            </friction>
+
+        </surface>
+      </collision>
+       <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.01</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>1. 0.1 0.1 1</ambient>
+          <diffuse>1. 0.1 0.1 1</diffuse>
+          </material>
+        </visual> 
+      <sensor name="sensor_contact" type="contact">
+        <contact>
+          <collision>collision_sensor1_volume</collision>
+          <topic>/vehicle/contact_sensor</topic>
+        </contact>
+        <always_on>1</always_on>
+        <update_rate>100</update_rate>
+      </sensor>
+    </link>
+
+    <link name="battery_b_lr_link">
+      <pose>-0.0275 0.02 0.02 1.570796 0 0</pose>
+      <inertial>
+        <mass>0.000756</mass>
+        <pose>0 0 0.02 0 0 0</pose>
+        <inertia>
+          <ixx>1.06e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.06e-06</iyy>
+          <iyz>0</iyz>
+          <izz>9.5e-08</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.02 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius>
+            <length>0.04</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="head_visual">
+        <pose>0 0 0.041 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.001</radius>
+            <length>0.002</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="battery_b_rl_link">
+      <pose>-0.0125 -0.02 0.02 -1.570796 0 0</pose>
+      <inertial>
+        <mass>0.000756</mass>
+        <pose>0 0 0.02 0 0 0</pose>
+        <inertia>
+          <ixx>1.06e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.06e-06</iyy>
+          <iyz>0</iyz>
+          <izz>9.5e-08</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.02 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius>
+            <length>0.04</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="head_visual">
+        <pose>0 0 0.041 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.001</radius>
+            <length>0.002</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="box_b_link">
+      <pose>-0.02 0 0.014 0 0 1.570796</pose>
+      <inertial>
+        <mass>0.000101</mass>
+        <pose>0 0 0.005 0 0 0</pose>
+        <inertia>
+          <ixx>1.06e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2.19e-07</iyy>
+          <iyz>0</iyz>
+          <izz>3.08e-07</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="front_visual">
+        <pose>0 0.016 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.002 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0 1 0 1</ambient>
+          <diffuse>0 1 0 1</diffuse>
+          <specular>0 1 0 1</specular>
+        </material>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="back_visual">
+        <pose>0 -0.016 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.002 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="bottom_visual">
+        <pose>0 0 0.001 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.03 0.002</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="left_visual">
+        <pose>-0.026 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.002 0.034 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="middle_visual">
+        <pose>0 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.002 0.006</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="right_visual">
+        <pose>0.026 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.002 0.034 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="battery_f_lr_link">
+      <pose>0.0275 0.02 0.02 1.570796 0 0</pose>
+      <inertial>
+        <mass>0.000756</mass>
+        <pose>0 0 0.02 0 0 0</pose>
+        <inertia>
+          <ixx>1.06e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.06e-06</iyy>
+          <iyz>0</iyz>
+          <izz>9.5e-08</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.02 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius>
+            <length>0.04</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="head_visual">
+        <pose>0 0 0.041 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.001</radius>
+            <length>0.002</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="battery_f_rl_link">
+      <pose>0.0125 -0.02 0.02 -1.570796 0 0</pose>
+      <inertial>
+        <mass>0.000756</mass>
+        <pose>0 0 0.02 0 0 0</pose>
+        <inertia>
+          <ixx>1.06e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.06e-06</iyy>
+          <iyz>0</iyz>
+          <izz>9.5e-08</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.02 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius>
+            <length>0.04</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="head_visual">
+        <pose>0 0 0.041 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.001</radius>
+            <length>0.002</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="box_f_link">
+      <pose>0.02 0 0.014 0 0 -1.570796</pose>
+      <inertial>
+        <mass>0.000101</mass>
+        <pose>0 0 0.005 0 0 0</pose>
+        <inertia>
+          <ixx>1.06e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2.19e-07</iyy>
+          <iyz>0</iyz>
+          <izz>3.08e-07</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="right_visual">
+        <pose>0.026 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.002 0.034 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="front_visual">
+        <pose>0 0.016 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.002 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="bottom_visual">
+        <pose>0 0 0.001 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.03 0.002</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="middle_visual">
+        <pose>0 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.002 0.006</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="left_visual">
+        <pose>-0.026 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.002 0.034 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="back_visual">
+        <pose>0 -0.016 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.05 0.002 0.01</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="caster_link">
+      <pose>-0.04 0 0 0 0 0</pose>
+      <inertial>
+        <mass>0.000144</mass>
+        <pose>0 0 0.0065 0 0 0</pose>
+        <inertia>
+          <ixx>2.4e-08</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2.4e-08</iyy>
+          <iyz>0</iyz>
+          <izz>2.4e-08</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.0065 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.0065</radius>
+          </sphere>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name="body_collision">
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0.0065 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.0065</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>2</mu>
+              <mu2>2</mu2>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>0.75</coefficient>
+              <use_patch_radius>0</use_patch_radius>
+              <surface_radius>0.0065</surface_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+    <link name="wheel_l_link">
+      <pose>0 -0.05 0.016 1.570796 0 0</pose>
+      <inertial>
+        <mass>0.000311</mass>
+        <pose>0 0 0.003 0 0 0</pose>
+        <inertia>
+          <ixx>2.08e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2.08e-07</iyy>
+          <iyz>0</iyz>
+          <izz>3.98e-07</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.003 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.016</radius>
+            <length>0.006</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name="body_collision">
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0.003 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.016</radius>
+            <length>0.006</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>2000000000</mu>
+              <mu2>2000000000</mu2>
+              <fdir1>0 0 1</fdir1> 
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>15</coefficient>
+              <use_patch_radius>0</use_patch_radius>
+              <surface_radius>0.016</surface_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>1</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+    <link name="motor_l_link">
+      <pose>0 -0.02 0.016 1.570796 0 0</pose>
+      <inertial>
+        <mass>0.003158</mass>
+        <pose>0 0 0.01 0 0 0</pose>
+        <inertia>
+          <ixx>1.25e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.25e-06</iyy>
+          <iyz>0</iyz>
+          <izz>3.95e-07</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.01 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius>
+            <length>0.02</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="axis_visual">
+        <pose>0 0 0.025 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.001</radius>
+            <length>0.01</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="wheel_r_link">
+      <pose>0 0.05 0.016 -1.570796 0 0</pose>
+      <inertial>
+        <mass>0.000311</mass>
+        <pose>0 0 0.003 0 0 0</pose>
+        <inertia>
+          <ixx>2.08e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>2.08e-07</iyy>
+          <iyz>0</iyz>
+          <izz>3.98e-07</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.003 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.016</radius>
+            <length>0.006</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <collision name="body_collision">
+        <laser_retro>0</laser_retro>
+        <max_contacts>10</max_contacts>
+        <pose>0 0 0.003 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.016</radius>
+            <length>0.006</length>
+          </cylinder>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>2000000000</mu>
+              <mu2>20000000000</mu2>
+               <fdir1>0 0 1</fdir1>
+
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>15</coefficient>
+              <use_patch_radius>0</use_patch_radius>
+              <surface_radius>0.016</surface_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <contact>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>1</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+    <link name="motor_r_link">
+      <pose>0 0.02 0.016 -1.570796 0 0</pose>
+      <inertial>
+        <mass>0.003158</mass>
+        <pose>0 0 0.01 0 0 0</pose>
+        <inertia>
+          <ixx>1.25e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.25e-06</iyy>
+          <iyz>0</iyz>
+          <izz>3.95e-07</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.01 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.005</radius>
+            <length>0.02</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+      <visual name="axis_visual">
+        <pose>0 0 0.025 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.001</radius>
+            <length>0.01</length>
+          </cylinder>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <link name="display_link">
+      <pose>-0.02 0 0.025 0 0 1.570796</pose>
+      <inertial>
+        <mass>0.001164</mass>
+        <pose>0 0 0.002 0 0 0</pose>
+        <inertia>
+          <ixx>6.22e-07</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1.98e-06</iyy>
+          <iyz>0</iyz>
+          <izz>2.57e-06</izz>
+        </inertia>
+      </inertial>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+      <visual name="body_visual">
+        <pose>0 0 0.002 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.045 0.025 0.004</size>
+          </box>
+        </geometry>
+        <transparency>0</transparency>
+        <cast_shadows>1</cast_shadows>
+      </visual>
+    </link>
+    <!-- exchange this for other camera type depending on application -->
+    
+    <!-- down-looking line camera placed slightly ahead of the robot -->
+    <link name="front_camera_link">
+      <pose relative_to="blade_frame">0.047 0 -0.001 0 1.570796 0</pose>
+      <inertial>
+        <mass>1e-12</mass>
+      </inertial>
+      <self_collide>0</self_collide>
+      <sensor name="camera" type="camera">
+        <camera>
+          <horizontal_fov>3</horizontal_fov>
+          <image>
+            <height>4</height>
+            <width>100</width>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.001</near>
+            <far>1</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>1</visualize>
+        <topic>/vehicle/camera</topic>
+      </sensor>
+    </link>
+
+    <!-- forward-looking camera with 80x80 RGB 
+    <link name="front_camera_link">
+      <pose relative_to="blade_frame">0.047 0 0.015 0 0 0</pose>
+       <visual name="visual">
+         <pose>-0.01 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.005</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <ambient>0.1 0.1 1 1</ambient>
+          <diffuse>0.1 0.1 1 1</diffuse>
+          </material>
+        </visual> 
+
+      <inertial>
+        <mass>1e-12</mass>
+      </inertial>
+      <self_collide>0</self_collide>
+      <sensor name="camera" type="camera">
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <height>80</height>
+            <width>80</width>
+            <format>R8G8B8</format>
+          </image>
+          <save enabled="0">
+                                        </save>
+          <clip>
+            <near>0.001</near>
+            <far>3</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>0</visualize>
+        <topic>/vehicle/camera</topic>
+      </sensor>
+    </link>
+    -->
+
+    <!-- Comment this in if you want to use a top camera that actually shows the chosen material properties n real time. GUI does not do this due to bugs -->
+    <!--
+    <link name="top_camera_link">
+      <pose>-0.1 -0.02 0.1 0. 0.9 0</pose>
+      <inertial>
+        <mass>1e-12</mass>
+      </inertial>
+      <self_collide>0</self_collide>
+      <sensor name="camera" type="camera">
+        <camera>
+          <horizontal_fov>1.57</horizontal_fov>
+          <image>
+            <height>600</height>
+            <width>600</width>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.001</near>
+            <far>1</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>5</update_rate>
+        <visualize>1</visualize>
+        <topic>/vehicle/top_camera</topic>
+      </sensor>
+    </link>
+    -->
+    
+    <!-- JOINTS - JOINTS - JOINTS -->
+    <joint name="battery_b_lr_joint" type="fixed">
+      <parent>box_b_link</parent>
+      <child>battery_b_lr_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="battery_b_rl_joint" type="fixed">
+      <parent>box_b_link</parent>
+      <child>battery_b_rl_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="battery_f_lr_joint" type="fixed">
+      <parent>box_f_link</parent>
+      <child>battery_f_lr_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="box_b_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>box_b_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="battery_f_rl_joint" type="fixed">
+      <parent>box_f_link</parent>
+      <child>battery_f_rl_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="box_f_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>box_f_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="caster_joint" type="ball">
+      <parent>blade_link</parent>
+      <child>caster_link</child>
+      <pose>0 0 0.0065 0 0 0</pose>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="left_axis_joint" type="revolute">
+      <parent>blade_link</parent>
+      <child>wheel_l_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 -1</xyz>
+      </axis>
+      <physics>
+        <ode>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="motor_l_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>motor_l_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="right_axis_joint" type="revolute">
+      <parent>blade_link</parent>
+      <child>wheel_r_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+      <physics>
+        <ode>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </limit>
+          <suspension>
+            <cfm>0</cfm>
+            <erp>0.2</erp>
+          </suspension>
+        </ode>
+      </physics>
+    </joint>
+    <joint name="motor_r_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>motor_r_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="display_joint" type="fixed">
+      <parent>box_b_link</parent>
+      <child>display_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="front_camera_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>front_camera_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="led1_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>led1_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="led2_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>led2_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="led3_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>led3_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="led4_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>led4_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="led5_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>led5_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="led6_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>led6_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    <joint name="lidar_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>lidar_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+
+    <!-- com,ment out if no top camera used -->
+    <!-- 
+    <joint name="top_camera_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>top_camera_link</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint>
+    -->
+    
+    <joint name="collider_fix_joint" type="fixed">
+      <parent>blade_link</parent>
+      <child>front_bumper</child>
+      <pose>0 0 0 0 0 0</pose>
+    </joint> 
+    <!-- PLUGINS - PLUGINS - PLUGINS -->
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <left_joint>left_axis_joint</left_joint>
+      <right_joint>right_axis_joint</right_joint>
+      <wheel_separation>0.1</wheel_separation>
+      <wheel_radius>0.032</wheel_radius>
+      <min_velocity>-2000.0</min_velocity>
+      <max_velocity>+2000.0</max_velocity>
+      <min_acceleration>-2000000000000000</min_acceleration>
+      <max_acceleration>+2000000000000000</max_acceleration>
+      <min_jerk>-200000000000000</min_jerk>
+      <max_jerk>+200000000000000</max_jerk>
+      <topic>/vehicle/motor</topic>
+      <odom_topic>/vehicle/odo</odom_topic>
+      <odom_publish_frequency>120</odom_publish_frequency>
+    </plugin>
+  </model>
+</sdf>

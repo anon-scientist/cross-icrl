@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="test">
+    <static>true</static>
+    <link name="testlink">
+      <visual name="Plane">
+        <geometry>
+          <mesh>
+            <uri>meshes/model.dae</uri>
+            <submesh>
+              <name>Plane</name>
+            </submesh>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <specular>0.0 0.0 0.0 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>meshes/painted_concrete_02_diff_1k.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>meshes/model.dae</uri>
+          </mesh>
+        </geometry>
+        <surface/>
+      </collision>
+    </link>
+  </model>
+</sdf>
